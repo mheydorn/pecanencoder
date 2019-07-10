@@ -9,11 +9,9 @@ import matplotlib.pyplot as plt
 from IPython import embed
 import glob
 import TensorflowUtils as utils
-import cv2
+#import cv2
 import time
 import random
-from tensorflow.contrib.slim import fully_connected as fc
-
 
 #Import dataset
 imgPaths = glob.glob("resizedImages/512x512/neg/*") # Some images
@@ -40,8 +38,8 @@ queue_runner = tf.train.QueueRunner(
 tf.train.add_queue_runner(queue_runner)
 
 # Training Hyper Parameters
-learning_rate = 3e-5
-batch_size = 5
+learning_rate = 3e-3
+batch_size = 25
 
 display_step = 1000
 examples_to_show = 10
@@ -151,14 +149,14 @@ train_op = train(loss, trainable_var)
 with tf.Session() as sess:
     saver = tf.train.Saver(max_to_keep = 2, keep_checkpoint_every_n_hours = 2)
     sess.run(tf.global_variables_initializer()) 
-    saver.restore(sess, tf.train.latest_checkpoint('./checkpoints/') )
+    #saver.restore(sess, tf.train.latest_checkpoint('./checkpoints/') )
 
     coord = tf.train.Coordinator() #Coordinator for the queue runner which reads in the images
     threads = tf.train.start_queue_runners(sess=sess, coord=coord)
 
     #Training loop
     MAX_ITERATION = 1000000000000
-    for itr in xrange(MAX_ITERATION):
+    for itr in range(MAX_ITERATION):
 
         try:
             imgs = image_queue.dequeue_many(batch_size)
@@ -177,12 +175,12 @@ with tf.Session() as sess:
         print("loss =", train_loss )
         if itr % 1 == 0:
             print("Saving")
-            
+            '''
             #saver.save(sess, "checkpoints/model.ckpt", itr)
             cv2.imshow('output', np.clip(output[0], a_min = 0, a_max = 255).astype(np.uint8))
             cv2.imshow('originlsal', train_labels[0])
             k = cv2.waitKey(0)
-
+            '''
             '''
             plt.subplot(1, 2, 1)
             plt.imshow(output[0]/255.0)
