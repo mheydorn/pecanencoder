@@ -64,7 +64,7 @@ def get_variable(weights, name):
 
 
 def weight_variable(shape, stddev=0.02, name=None):
-    # print(shape)
+
     initial = tf.truncated_normal(shape, stddev=stddev)
     if name is None:
         return tf.Variable(initial)
